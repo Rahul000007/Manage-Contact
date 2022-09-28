@@ -22,7 +22,7 @@
                                         <i class="fas fa-plus"></i>
                                     </div>
                                 </div>
-                                <input type="text" id="firstName" name="name"
+                                <input required type="text" id="firstName" name="name"
                                        placeholder="Enter Name Here" class="form-control">
                             </div>
                             <!-- Second Name-->
@@ -32,7 +32,7 @@
                                         <i class="fas fa-user-alt"></i>
                                     </div>
                                 </div>
-                                <input type="text" id="secondName" name="secondName"
+                                <input  required type="text" id="secondName" name="secondName"
                                        placeholder="Enter Second Name Here"
                                        class="form-control">
                             </div>
@@ -43,7 +43,7 @@
                                         <i class="fa fa-phone"></i>
                                     </div>
                                 </div>
-                                <input type="number" id="phone" name="phone"
+                                <input required  type="number" id="phone" name="phone"
                                        placeholder="Enter Phone Number Here"
                                        class="form-control">
                             </div>
@@ -54,7 +54,7 @@
                                         <i class="fas fa-user-alt"></i>
                                     </div>
                                 </div>
-                                <input type="email" id="email" name="email"
+                                <input required type="email" id="email" name="email"
                                        placeholder="Enter Email Here"
                                        class="form-control">
                             </div>
@@ -71,7 +71,7 @@
                             </div>
                             <!-- Contact Description-->
                             <div class="form-group mt-3">
-                                <textarea placeholder="Enter contact Description" name="description" id="description"
+                                <textarea th:id="mytextarea" placeholder="Enter contact Description" name="description" id="description"
                                           class="form-control" cols="10" rows="5"></textarea>
                             </div>
                             <!--Image-->
@@ -91,5 +91,11 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#mytextarea'
+        });
+    </script>
 </section>
 </body>
