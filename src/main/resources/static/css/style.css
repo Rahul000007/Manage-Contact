@@ -49,6 +49,7 @@ background:#e2e2e2!important;
     height: 100%;
     position: fixed;
     padding-top: 45px;
+    z-index: 9999999999999999999;
 }
 .sidebar a{
     display: block;

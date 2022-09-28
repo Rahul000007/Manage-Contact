@@ -76,6 +76,7 @@ public class HomeController {
     // Handler for login
     @GetMapping("/signin")
     public String login(Model model){
+        model.addAttribute("title","Login");
         return "login";
     }
 }
