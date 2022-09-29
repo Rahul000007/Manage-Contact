@@ -99,6 +99,7 @@ public class UserController {
 //    {page} for pagination
     @GetMapping("/show-contacts/{page}")
     public String showContacts(@PathVariable("page") Integer page, Model model, Principal principal) {
+
         model.addAttribute("title", "Show User Contacts");
 
         String userName = principal.getName();
@@ -129,5 +130,14 @@ public class UserController {
         return "normal/contact_detail";
     }
 
+    // delete contact handler
+    @GetMapping("/delete/{cid}")
+    public String deleteContact(@PathVariable("cid")Integer cId,Model model,HttpSession session){
 
+        Contact contact = this.contactRepository.findById(cId).get();
+        contact.setUser(null);
+        this.contactRepository.delete(contact);
+        session.setAttribute("message",new Message("Contact Deleted successfully..","success"));
+        return "redirect:/user/show-contacts/0";
+    }
 }
