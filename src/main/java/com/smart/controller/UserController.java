@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import javax.swing.text.html.Option;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,6 +24,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/user")
@@ -73,6 +75,7 @@ public class UserController {
 //         processing and uploading file
             if (file.isEmpty()) {
                 System.out.println("File is empty");
+                contact.setImage("contact.png");
             } else {
                 contact.setImage(file.getOriginalFilename());
                 File saveFile = new ClassPathResource("static/img").getFile();
@@ -95,20 +98,36 @@ public class UserController {
     // show contact handler
 //    {page} for pagination
     @GetMapping("/show-contacts/{page}")
-    public String showContacts(@PathVariable("page")Integer page, Model model,Principal principal){
-        model.addAttribute("title","Show User Contacts");
+    public String showContacts(@PathVariable("page") Integer page, Model model, Principal principal) {
+        model.addAttribute("title", "Show User Contacts");
 
         String userName = principal.getName();
         User user = this.userRepository.getUserByUserName(userName);
 //        contactPage page
 //        contact per page
-        Pageable pageable = PageRequest.of(page,5);
-        Page<Contact> contacts = this.contactRepository.findContactByUser(user.getId(),pageable);
-        model.addAttribute("contacts",contacts);
-        model.addAttribute("currentPage",page);
-        model.addAttribute("totalPages",contacts.getTotalPages());
+        Pageable pageable = PageRequest.of(page, 5);
+        Page<Contact> contacts = this.contactRepository.findContactByUser(user.getId(), pageable);
+        model.addAttribute("contacts", contacts);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", contacts.getTotalPages());
 
         return "normal/show_contacts";
     }
+
+    //  showing particular contact detail
+    @RequestMapping("/{cId}/contact")
+    public String showContactDetail(@PathVariable("cId") Integer cId, Model model, Principal principal) {
+        System.out.println(cId);
+        Optional<Contact> contactOption = this.contactRepository.findById(cId);
+        Contact contact = contactOption.get();
+        String userName = principal.getName();
+        User user = this.userRepository.getUserByUserName(userName);
+        if (user.getId() == contact.getUser().getId()) {
+            model.addAttribute("contact", contact);
+            model.addAttribute("title", contact.getName());
+        }
+        return "normal/contact_detail";
+    }
+
 
 }

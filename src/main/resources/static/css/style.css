@@ -77,3 +77,10 @@ background:#e2e2e2!important;
     font-size: 36px;
     cursor: pointer;
 }
+.my_profile_picture{
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid black;
+}
