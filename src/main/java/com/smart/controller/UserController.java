@@ -7,6 +7,9 @@ import com.smart.entities.User;
 import com.smart.helper.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +65,8 @@ public class UserController {
     //    processing  add contact form
     @PostMapping("/process-contact")
     public String processContact(@ModelAttribute Contact contact,
-                                 @RequestParam("profileImage") MultipartFile file, Principal principal, HttpSession session) {
+                                 @RequestParam("profileImage") MultipartFile file,
+                                 Principal principal, HttpSession session) {
         try {
             String name = principal.getName();
             User user = userRepository.getUserByUserName(name);
@@ -89,14 +93,20 @@ public class UserController {
     }
 
     // show contact handler
-    @GetMapping("/show-contacts")
-    public String showContacts(Model model,Principal principal){
+//    {page} for pagination
+    @GetMapping("/show-contacts/{page}")
+    public String showContacts(@PathVariable("page")Integer page, Model model,Principal principal){
         model.addAttribute("title","Show User Contacts");
 
         String userName = principal.getName();
         User user = this.userRepository.getUserByUserName(userName);
-        List<Contact> contacts = this.contactRepository.findContactByUser(user.getId());
+//        contactPage page
+//        contact per page
+        Pageable pageable = PageRequest.of(page,5);
+        Page<Contact> contacts = this.contactRepository.findContactByUser(user.getId(),pageable);
         model.addAttribute("contacts",contacts);
+        model.addAttribute("currentPage",page);
+        model.addAttribute("totalPages",contacts.getTotalPages());
 
         return "normal/show_contacts";
     }
