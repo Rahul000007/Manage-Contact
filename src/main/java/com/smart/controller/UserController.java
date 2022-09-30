@@ -194,4 +194,5 @@ public class UserController {
         model.addAttribute("title","Profile Page");
         return "normal/profile";
     }
+
 }
