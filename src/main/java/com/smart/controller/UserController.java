@@ -14,16 +14,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpSession;
-import javax.swing.text.html.Option;
+import javax.transaction.Transactional;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -40,9 +38,7 @@ public class UserController {
     @ModelAttribute
     public void addCommonData(Model model, Principal principal) {
         String userName = principal.getName();
-        System.out.println("USERNAME " + userName);
         User user = userRepository.getUserByUserName(userName);
-        System.out.println("USER " + user);
         model.addAttribute("user", user);
     }
 
@@ -81,7 +77,6 @@ public class UserController {
                 File saveFile = new ClassPathResource("static/img").getFile();
                 Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + file.getOriginalFilename());
                 Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-                System.out.println("Image is uploaded");
             }
             contact.setUser(user);
             user.getContacts().add(contact);
@@ -95,7 +90,7 @@ public class UserController {
         return "normal/add_contact_form";
     }
 
-    // show contact handler
+     // show contact handler
     //    {page} for pagination
     @GetMapping("/show-contacts/{page}")
     public String showContacts(@PathVariable("page") Integer page, Model model, Principal principal) {
@@ -131,11 +126,13 @@ public class UserController {
 
     // delete contact handler
     @GetMapping("/delete/{cid}")
-    public String deleteContact(@PathVariable("cid") Integer cId, Model model, HttpSession session) {
+    @Transactional
+    public String deleteContact(@PathVariable("cid") Integer cId, Model model,HttpSession session,Principal principal) {
 
         Contact contact = this.contactRepository.findById(cId).get();
-        contact.setUser(null);
-        this.contactRepository.delete(contact);
+        User user = this.userRepository.getUserByUserName(principal.getName());
+        user.getContacts().remove(contact);
+
         session.setAttribute("message", new Message("Contact Deleted successfully..", "success"));
         return "redirect:/user/show-contacts/0";
     }
@@ -191,4 +188,10 @@ public class UserController {
         return "redirect:/user/"+contact.getcId()+"/contact";
     }
 
+//    Profile handler
+    @GetMapping("/profile")
+    public String yourProfile(Model model){
+        model.addAttribute("title","Profile Page");
+        return "normal/profile";
+    }
 }

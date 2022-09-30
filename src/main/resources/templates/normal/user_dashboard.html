@@ -6,7 +6,26 @@
 </head>
 <body>
 <section>
-    <h1>Welcome to dashboard </h1>
+   <div class="container">
+       <div class="card">
+           <div class="card-body my-5">
+               <div class="container text-center">
+                   <img alt="Profile Photo" style="width: 200px; height: 200px;" class="my_profile_picture" src=""
+                        th:src="@{'/img/contact_logo.png'}">
+               </div>
+               <h1 class="text-center mt-3 text-secondary font-italic font-weight-light">
+                   Start Adding your contact on cloud
+               </h1>
+               <div class="container text-center">
+               <a th:href="@{/user/add-contact}" class="btn btn-primary text-uppercase mt-4">
+                   Add New Contact
+               </a>
+
+               </div>
+
+           </div>
+       </div>
+   </div>
 </section>
 </body>
 </html>
