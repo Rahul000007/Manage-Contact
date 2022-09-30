@@ -96,7 +96,7 @@ public class UserController {
     }
 
     // show contact handler
-//    {page} for pagination
+    //    {page} for pagination
     @GetMapping("/show-contacts/{page}")
     public String showContacts(@PathVariable("page") Integer page, Model model, Principal principal) {
 
@@ -118,7 +118,6 @@ public class UserController {
     //  showing particular contact detail
     @RequestMapping("/{cId}/contact")
     public String showContactDetail(@PathVariable("cId") Integer cId, Model model, Principal principal) {
-        System.out.println(cId);
         Optional<Contact> contactOption = this.contactRepository.findById(cId);
         Contact contact = contactOption.get();
         String userName = principal.getName();
@@ -132,12 +131,64 @@ public class UserController {
 
     // delete contact handler
     @GetMapping("/delete/{cid}")
-    public String deleteContact(@PathVariable("cid")Integer cId,Model model,HttpSession session){
+    public String deleteContact(@PathVariable("cid") Integer cId, Model model, HttpSession session) {
 
         Contact contact = this.contactRepository.findById(cId).get();
         contact.setUser(null);
         this.contactRepository.delete(contact);
-        session.setAttribute("message",new Message("Contact Deleted successfully..","success"));
+        session.setAttribute("message", new Message("Contact Deleted successfully..", "success"));
         return "redirect:/user/show-contacts/0";
     }
+
+    //    Opening Update form handler
+    @PostMapping("/update-contact/{cid}")
+    public String updateForm(@PathVariable("cid") Integer cId, Model model) {
+
+        model.addAttribute("title", "Update contact");
+
+        Contact contact = this.contactRepository.findById(cId).get();
+        model.addAttribute(contact);
+
+        return "normal/update_form";
+    }
+
+    //    Processing Update Handler
+    @PostMapping("/process-update")
+    public String updateHandler(@ModelAttribute Contact contact,@RequestParam("profileImage") MultipartFile file,
+                                Model model, Principal principal,HttpSession session) {
+
+        try{
+//            old contact detail
+            Contact oldContact = this.contactRepository.findById(contact.getcId()).get();
+
+            if(!file.isEmpty()){
+//                file work
+//                rewrite
+//                delete old photo
+                File deleteFile = new ClassPathResource("static/img").getFile();
+                File file1 = new File(deleteFile,oldContact.getImage());
+                file1.delete();
+//                update new photo
+                File saveFile = new ClassPathResource("static/img").getFile();
+                Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + file.getOriginalFilename());
+                Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+                contact.setImage(file.getOriginalFilename());
+
+            }else {
+                contact.setImage(oldContact.getImage());
+            }
+
+            User user = this.userRepository.getUserByUserName(principal.getName());
+            contact.setUser(user);
+            this.contactRepository.save(contact);
+            session.setAttribute("message",new Message("your contact updated","success"));
+
+        }catch (Exception e){
+            e.printStackTrace();
+            session.setAttribute("message",new Message("Failed to update contact","alert"));
+        }
+
+        return "redirect:/user/"+contact.getcId()+"/contact";
+    }
+
 }

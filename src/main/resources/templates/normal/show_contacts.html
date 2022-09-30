@@ -25,7 +25,7 @@
                     <td>
                         <img alt="Profile Photo Display" class="my_profile_picture" src=""
                              th:src="@{'/img/'+${c.image}}">
-                       <span th:text="${c.name}"></span>
+                        <span th:text="${c.name}"></span>
                     </td>
                     <td>
                         <a th:href="@{'/user/' +${c.cId}+ '/contact/'}">
@@ -34,8 +34,14 @@
                     </td>
                     <td th:text="${c.phone}"></td>
                     <td>
-                       <a th:href="@{'/user/delete/'+${c.cId}}" class="btn btn-danger btn-sm">Delete</a>
-                        <button class="btn btn-primary btn-sm">Update</button>
+                        <a th:href="@{'/user/delete/'+${c.cId}}" class="btn btn-danger btn-sm">Delete</a>
+
+                        <form method="post" th:action="@{'/user/update-contact/'+${c.cId}}" class="mt-2">
+
+                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+
+                        </form>
+
                     </td>
                 </tr>
                 </tbody>
