@@ -10,10 +10,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.io.File;
@@ -27,6 +29,9 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -90,7 +95,7 @@ public class UserController {
         return "normal/add_contact_form";
     }
 
-     // show contact handler
+    // show contact handler
     //    {page} for pagination
     @GetMapping("/show-contacts/{page}")
     public String showContacts(@PathVariable("page") Integer page, Model model, Principal principal) {
@@ -127,7 +132,7 @@ public class UserController {
     // delete contact handler
     @GetMapping("/delete/{cid}")
     @Transactional
-    public String deleteContact(@PathVariable("cid") Integer cId, Model model,HttpSession session,Principal principal) {
+    public String deleteContact(@PathVariable("cid") Integer cId, Model model, HttpSession session, Principal principal) {
 
         Contact contact = this.contactRepository.findById(cId).get();
         User user = this.userRepository.getUserByUserName(principal.getName());
@@ -151,19 +156,19 @@ public class UserController {
 
     //    Processing Update Handler
     @PostMapping("/process-update")
-    public String updateHandler(@ModelAttribute Contact contact,@RequestParam("profileImage") MultipartFile file,
-                                Model model, Principal principal,HttpSession session) {
+    public String updateHandler(@ModelAttribute Contact contact, @RequestParam("profileImage") MultipartFile file,
+                                Model model, Principal principal, HttpSession session) {
 
-        try{
+        try {
 //            old contact detail
             Contact oldContact = this.contactRepository.findById(contact.getcId()).get();
 
-            if(!file.isEmpty()){
+            if (!file.isEmpty()) {
 //                file work
 //                rewrite
 //                delete old photo
                 File deleteFile = new ClassPathResource("static/img").getFile();
-                File file1 = new File(deleteFile,oldContact.getImage());
+                File file1 = new File(deleteFile, oldContact.getImage());
                 file1.delete();
 //                update new photo
                 File saveFile = new ClassPathResource("static/img").getFile();
@@ -171,28 +176,56 @@ public class UserController {
                 Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
                 contact.setImage(file.getOriginalFilename());
 
-            }else {
+            } else {
                 contact.setImage(oldContact.getImage());
             }
 
             User user = this.userRepository.getUserByUserName(principal.getName());
             contact.setUser(user);
             this.contactRepository.save(contact);
-            session.setAttribute("message",new Message("your contact updated","success"));
+            session.setAttribute("message", new Message("your contact updated", "success"));
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("message",new Message("Failed to update contact","alert"));
+            session.setAttribute("message", new Message("Failed to update contact", "alert"));
         }
 
-        return "redirect:/user/"+contact.getcId()+"/contact";
+        return "redirect:/user/" + contact.getcId() + "/contact";
     }
 
-//    Profile handler
+    //    Profile handler
     @GetMapping("/profile")
-    public String yourProfile(Model model){
-        model.addAttribute("title","Profile Page");
+    public String yourProfile(Model model) {
+        model.addAttribute("title", "Profile Page");
         return "normal/profile";
     }
 
+    //    opening setting handler
+    @GetMapping("/settings")
+    public String openSetting() {
+        return "normal/settings";
+    }
+
+    //    processing settings handler
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword, Principal principal, HttpSession session) {
+
+        String userName = principal.getName();
+        User currentUser = this.userRepository.getUserByUserName(userName);
+
+        if (this.bCryptPasswordEncoder.matches(oldPassword, currentUser.getPassword())) {
+
+           //changing the password
+            currentUser.setPassword(this.bCryptPasswordEncoder.encode(newPassword));
+            this.userRepository.save(currentUser);
+            session.setAttribute("message", new Message("Your Password is Changed successfully..", "success"));
+
+        } else {
+
+            session.setAttribute("message", new Message("Please Enter correct Old Password", "danger"));
+            return "redirect:/user/settings";
+
+        }
+        return "redirect:/user/index";
+    }
 }
