@@ -10,7 +10,7 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <title th:text="${title}">Base Html</title>
-<!--jquery-->
+    <!--jquery-->
     <script src="https://code.jquery.com/jquery-3.6.1.slim.js"
             integrity="sha256-tXm+sa1uzsbFnbXt8GJqsgi2Tw+m4BLGDof6eUPjbtk=" crossorigin="anonymous"></script>
 
@@ -48,11 +48,14 @@
 <div class="sidebar mt-3">
     <span onclick="toggleSidebar()" class="crossBtn">&times;</span>
     <a id="home-link" href="#" th:href="@{/user/index}" class="item"> <i class="fa-solid fa-house"></i> Home</a>
-    <a id="contacts-link" href="#" th:href="@{/user/show-contacts/0}" class="item"> <i class="fa-solid fa-address-book"></i> View
+    <a id="contacts-link" href="#" th:href="@{/user/show-contacts/0}" class="item"> <i
+            class="fa-solid fa-address-book"></i> View
         Contact</a>
-    <a id="add-link" href="#" th:href="@{/user/add-contact}" class="item"> <i class="fa-solid fa-pen"></i> Add Contact</a>
+    <a id="add-link" href="#" th:href="@{/user/add-contact}" class="item"> <i class="fa-solid fa-pen"></i> Add
+        Contact</a>
     <a id="profile-link" href="#" th:href="@{/user/profile}" class="item"> <i class="fa-solid fa-user"></i> Your Profile</a>
-    <a id="settings-link" href="#" th:href="@{/user/settings}" class="item"> <i class="fa-solid fa-gear"></i> Settings</a>
+    <a id="settings-link" href="#" th:href="@{/user/settings}" class="item"> <i class="fa-solid fa-gear"></i>
+        Settings</a>
     <a href="#" th:href="@{/logout}"> <i class="fa-sharp fa-solid fa-right-from-bracket"></i> Logout</a>
     <div class="divider"></div>
 </div>
