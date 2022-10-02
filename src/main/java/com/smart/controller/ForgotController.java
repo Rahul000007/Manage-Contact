@@ -41,7 +41,7 @@ public class ForgotController {
         System.out.println("OTP: " + otp);
 
 //       code for sending otp to mail
-        String subject = "OTP from SCM";
+        String subject = "OTP from Cloud Contact";
         String message = ""
                 + "<div style='border:1px solid #e2e2e2; padding:20px'>"
                 + "<h1>"
