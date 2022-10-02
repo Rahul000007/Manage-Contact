@@ -11,7 +11,7 @@ import java.util.Properties;
 public class EmailService {
     public boolean sendEmail(String subject, String message, String to) {
         boolean f = false;
-        String from = "rahul0suthar@gmail.com";
+        String from = "cloud.contact.member@gmail.com";
         //  variable for gmail
         String host = "smtp.gmail.com";
         //  get the system properties
@@ -27,7 +27,7 @@ public class EmailService {
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("rahul0suthar@gmail.com", "lwzrareiaaqefehh");
+                return new PasswordAuthentication("cloud.contact.member@gmail.com", "ayjxmjsmknrcaxty");
             }
         });
         session.setDebug(true);
