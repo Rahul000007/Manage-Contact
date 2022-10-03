@@ -50,7 +50,7 @@ public class HomeController {
             if (!agreement) {
                 System.out.println("you have not agreed terms and conditions");
                 throw new Exception("you have not agreed terms and conditions");
-            }
+            }else {
             user.setRole("ROLE_USER");
             user.setEnabled(true);
             user.setImageUrl("default.png");
@@ -62,8 +62,9 @@ public class HomeController {
             User result = this.userRepository.save(user);
             model.addAttribute("user", new User());
 
-            session.setAttribute("message", new Message("Success otp", "alert-success"));
+            session.setAttribute("message", new Message("Successfully  otp", "alert-success"));
             return "signup";
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
