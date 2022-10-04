@@ -80,6 +80,7 @@ public class HomeController {
         System.out.println(email);
 
 //        generating 4 digit otp
+
         Random random = new Random();
         int otp = random.nextInt(999999);
         System.out.println("OTP: " + otp);
@@ -104,7 +105,7 @@ public class HomeController {
             return "verify_NewUser_otp";
         } else {
             model.addAttribute("user", user);
-            session.setAttribute("message", new Message("Something went wrong Unable to send Otp check your Email id", "alert-danger"));
+            session.setAttribute("message", new Message("Something went wrong Unable to send Otp check your Email Id", "alert-danger"));
             return "signup";
         }
     }
