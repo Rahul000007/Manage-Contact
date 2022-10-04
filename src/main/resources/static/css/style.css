@@ -2,7 +2,7 @@ body{
 background:#e2e2e2!important;
 }
 .bg-primary{
-    background:#009688 !important;
+    background:#0d6efd !important;
 }
 .banner{
     width: 100%;
@@ -98,6 +98,6 @@ background:#e2e2e2!important;
     display: none;
 }
 .active{
-    background: #009688 !important;
+    background: #0d6efd !important;
     color: white !important;
 }
