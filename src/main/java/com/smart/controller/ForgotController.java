@@ -3,14 +3,13 @@ package com.smart.controller;
 import com.smart.dao.UserRepository;
 import com.smart.entities.User;
 import com.smart.service.EmailService;
-import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import javax.servlet.http.HttpSession;
 import java.util.Random;
 
@@ -27,13 +26,14 @@ public class ForgotController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @RequestMapping("/forgot")
-    public String openEmailForm() {
+    public String openEmailForm(Model model) {
+        model.addAttribute("title","Forgot Password");
         return "forgot_email_form";
     }
 
     // OTP generation and sending to mail
     @PostMapping("/send-otp")
-    public String sendOTP(@RequestParam("email") String email, HttpSession session) {
+    public String sendOTP(@RequestParam("email") String email, HttpSession session, Model model) {
         System.out.println("EMAIL " + email);
 //       generating 4 digit otp
         Random random = new Random();
@@ -57,6 +57,7 @@ public class ForgotController {
         if (flag) {
             session.setAttribute("myotp", otp);
             session.setAttribute("email", email);
+            model.addAttribute("title","Verify OTP");
             return "verify_otp";
         } else {
             session.setAttribute("message", "Check your Email Id");
@@ -66,7 +67,7 @@ public class ForgotController {
 
     //    verify otp
     @PostMapping("/verify-otp")
-    public String verifyOtp(@RequestParam("otp") Integer otp, HttpSession session) {
+    public String verifyOtp(@RequestParam("otp") Integer otp, HttpSession session,Model model) {
 
         Integer myOtp = (int) session.getAttribute("myotp");
         String email = (String) session.getAttribute("email");
@@ -81,6 +82,7 @@ public class ForgotController {
                 return "forgot_email_form";
             } else {
 //                send change password form
+                model.addAttribute("title","Change Password");
             return "password_change_form";
             }
         } else {

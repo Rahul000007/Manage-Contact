@@ -51,7 +51,7 @@ public class UserController {
     @RequestMapping("/index")
     public String dashboard(Model model, Principal principal) {
 
-        model.addAttribute("title", "User Dashboard");
+        model.addAttribute("title", "Home");
         return "normal/user_dashboard";
     }
 
