@@ -100,7 +100,7 @@ public class HomeController {
         if (flag) {
             session.setAttribute("NewUserOtp", otp);
             session.setAttribute("email", email);
-            model.addAttribute("title","Enter OTP");
+            model.addAttribute("title", "Enter OTP");
             return "verify_NewUser_otp";
         } else {
             model.addAttribute("user", user);
@@ -120,16 +120,16 @@ public class HomeController {
 
             User user1 = this.userRepository.getUserByUserName(email);
 
-            if(user1 == null){
-            User user = (User) session.getAttribute("newUser");
-            User result = this.userRepository.save(user);
-            model.addAttribute("user", new User());
-            session.setAttribute("message", new Message("Successfully  Registered !!", "alert-success"));
-            model.addAttribute("title","Register Here");
-            return "signup";
-            }else {
+            if (user1 == null) {
+                User user = (User) session.getAttribute("newUser");
+                User result = this.userRepository.save(user);
                 model.addAttribute("user", new User());
-                session.setAttribute("message", new Message("User Already Exists with this Email "+email,"alert-danger"));
+                session.setAttribute("message", new Message("Successfully  Registered !!", "alert-success"));
+                model.addAttribute("title", "Register Here");
+                return "signup";
+            } else {
+                model.addAttribute("user", new User());
+                session.setAttribute("message", new Message("User Already Exists with this Email " + email, "alert-danger"));
                 return "signup";
             }
         } else {
