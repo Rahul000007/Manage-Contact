@@ -8,5 +8,5 @@
   
   Manage-Contact is used to store contact and other information about the contact 
   your can add information like email,work,images and about the person using an 
-  enhanced text editor. Using spring-security helps to secure contact and your
-  information.
+  enhanced text editor. Using spring-security helps to secure your contact and 
+  your information.
