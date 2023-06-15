@@ -29,7 +29,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="c : ${contacts}">
-                            <th scope="row" th:text="${'SCM2022'+c.cId}"></th>
+                            <th scope="row" th:text="${c.cId}"></th>
                             <td>
                                 <img alt="Profile Photo Display" class="my_profile_picture" src=""
                                      th:src="@{'/img/'+${c.image}}">

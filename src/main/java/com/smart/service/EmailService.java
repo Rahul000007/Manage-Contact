@@ -26,7 +26,7 @@ public class EmailService {
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("cloud.contact.member@gmail.com", "ayjxmjsmknrcaxty");
+                return new PasswordAuthentication("yours@gamil.com", "Password");
             }
         });
         session.setDebug(true);
@@ -41,7 +41,7 @@ public class EmailService {
             m.setSubject(subject);
             // adding text to message
 //            m.setText(message);
-            m.setContent(message,"text/html");
+            m.setContent(message, "text/html");
             //send
             Transport.send(m);
             System.out.println("sent success...............");
