@@ -60,7 +60,6 @@ public class HomeController {
                                Model model, HttpSession session) {
         try {
             if (!agreement) {
-                System.out.println("you have not agreed terms and conditions");
                 throw new Exception("you have not agreed terms and conditions");
             } else {
                 user.setRole("ROLE_USER");
@@ -68,7 +67,6 @@ public class HomeController {
                 user.setImageUrl("default.png");
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-                System.out.println("Agreement " + agreement);
                 session.setAttribute("newUser", user);
 
                 return "redirect:/send-otp-new-user";
@@ -87,13 +85,11 @@ public class HomeController {
 
         User user = (User) session.getAttribute("newUser");
         String email = user.getEmail();
-        System.out.println(email);
 
 //        generating 4 digit otp
 
         Random random = new Random();
         int otp = random.nextInt(999999);
-        System.out.println("OTP: " + otp);
 
 //       code for sending otp to mail
         String subject = "OTP from Cloud Contact";
@@ -158,7 +154,6 @@ public class HomeController {
 
     @GetMapping("/signup-google")
     public String handleGoogleCallback(OAuth2AuthenticationToken oAuth2AuthenticationToken, Model model, HttpSession session) {
-        System.out.println("=============handleGoogleCallBack=============");
 
         boolean isAuthenticated = oAuth2AuthenticationToken.isAuthenticated();
         if (!isAuthenticated) {
@@ -169,7 +164,6 @@ public class HomeController {
         for (Map.Entry<String, Object> entry : oAuth2User.getAttributes().entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            System.out.println(key + " = " + value);
             data.put(key, value);
         }
         String firstName = (String) data.get("given_name");
