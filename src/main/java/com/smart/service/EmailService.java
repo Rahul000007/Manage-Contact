@@ -1,6 +1,8 @@
 package com.smart.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -8,9 +10,16 @@ import java.util.Properties;
 
 @Service
 public class EmailService {
+
+    @Value("${email.service.account}")
+    String from;
+
+    @Value("${email.service.password}")
+    String password;
+
     public boolean sendEmail(String subject, String message, String to) {
         boolean f = false;
-        String from = "cloud.contact.member@gmail.com";
+
         //  variable for gmail
         String host = "smtp.gmail.com";
         //  get the system properties
@@ -26,7 +35,7 @@ public class EmailService {
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("yours@gamil.com", "Password");
+                return new PasswordAuthentication(from, password);
             }
         });
         session.setDebug(true);

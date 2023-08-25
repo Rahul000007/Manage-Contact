@@ -46,6 +46,12 @@ public class MyConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/dologin")
                 .defaultSuccessUrl("/user/index")
                 .and()
-                .csrf().disable();
+                .csrf().disable()
+                .oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorization/google").and()
+                .defaultSuccessUrl("/signup-google",true)
+                .and()
+                .oauth2Client();;
     }
 }

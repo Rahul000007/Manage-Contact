@@ -5,12 +5,23 @@ import com.smart.entities.User;
 import com.smart.helper.Message;
 import com.smart.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 @Controller
 public class HomeController {
@@ -143,6 +154,48 @@ public class HomeController {
     public String login(Model model) {
         model.addAttribute("title", "Login");
         return "login";
+    }
+
+    @GetMapping("/signup-google")
+    public String handleGoogleCallback(OAuth2AuthenticationToken oAuth2AuthenticationToken, Model model, HttpSession session) {
+        System.out.println("=============handleGoogleCallBack=============");
+
+        boolean isAuthenticated = oAuth2AuthenticationToken.isAuthenticated();
+        if (!isAuthenticated) {
+            return "signup";
+        }
+        OAuth2User oAuth2User = oAuth2AuthenticationToken.getPrincipal();
+        Map<String, Object> data = new TreeMap<>();
+        for (Map.Entry<String, Object> entry : oAuth2User.getAttributes().entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            System.out.println(key + " = " + value);
+            data.put(key, value);
+        }
+        String firstName = (String) data.get("given_name");
+        String lastName = (String) data.get("family_name");
+        String name = (String) data.get("name");
+        String email = (String) data.get("email");
+        String image = (String) data.get("picture");
+        String existingEmail = userRepository.getUserByUserName(email).getEmail();
+        if (existingEmail.equals(email)) {
+            model.addAttribute("user", new User());
+            session.setAttribute("message", new Message("User Already Exists with this Email " + email, "alert-danger"));
+            return "signup";
+        }
+        User user = new User();
+        user.setName(firstName);
+        user.setEmail(email);
+        user.setRole("ROLE_USER");
+        user.setImageUrl(image);
+        user.setEnabled(true);
+        user.setPassword(passwordEncoder.encode("123456"));
+        user.setAbout("Write Something About You");
+        userRepository.save(user);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(email, user.getPassword(), List.of(new SimpleGrantedAuthority(user.getRole())));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        model.addAttribute("user", new User());
+        return "redirect:/user/index";
     }
 }
 

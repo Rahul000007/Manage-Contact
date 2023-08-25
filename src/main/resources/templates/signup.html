@@ -15,7 +15,7 @@
             </div>
 
             <div class="container text-center">
-                <img style="width:80px" th:src="@{/img/membership.png}" alt="img" src="">
+                <img style="width:80px;margin-top:20px" th:src="@{/img/membership.png}" alt="img" src="">
             </div>
 
             <h1 class="text-center">Register Here</h1>
@@ -23,22 +23,22 @@
             <form novalidate th:action="@{/do_register}" method="post" th:object="${user}">
                 <!--Name Field-->
                 <div class="mb-3">
-                    <label for="name_field" class="form-label">Your Name</label>
+                    <label for="name_field" class="form-label">Name</label>
                     <input name="name" th:value="${user.name}" type="text" class="form-control"
-                           id="name_field" aria-describedby="emailHelp" placeholder="Enter Here" required>
+                           id="name_field" aria-describedby="emailHelp" placeholder="Name" required>
 
                 </div>
                 <!--Email Field-->
                 <div class="mb-3">
-                    <label for="email_field" class="form-label">Your Email</label>
+                    <label for="email_field" class="form-label">Email</label>
                     <input name="email" th:value="${user.email}" type="email" class="form-control" id="email_field"
-                           aria-describedby="emailHelp" placeholder="Enter Here" required>
+                           aria-describedby="emailHelp" placeholder="Email" required>
                 </div>
                 <!--password Field-->
                 <div class="mb-3">
-                    <label for="password_field" class="form-label">Your Password</label>
+                    <label for="password_field" class="form-label">Password</label>
                     <input name="password" type="password" class="form-control" id="password_field"
-                           aria-describedby="emailHelp" placeholder="Enter Here" required>
+                           aria-describedby="emailHelp" placeholder="Password" required>
                 </div>
                 <!-- About-->
                 <div class="md-3">
@@ -52,10 +52,13 @@
                     <label for="agreement">Accept terms and conditions</label>
                 </div>
                 <div class="container text-center mt-2">
-                    <button type="reset" class="btn btn-primary">Reset</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="reset" class="btn btn-primary btn-sm">Reset</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Submit</button>
                 </div>
             </form>
+            <div class="text-center mt-2">
+            <a href="/oauth2/authorization/google" class="btn btn-primary btn-sm mb-2">SignUp with google</a>
+            </div>
         </div>
     </div>
 </section>

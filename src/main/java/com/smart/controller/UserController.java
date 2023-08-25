@@ -1,11 +1,16 @@
 package com.smart.controller;
 
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
 import com.smart.dao.ContactRepository;
 import com.smart.dao.UserRepository;
 import com.smart.entities.Contact;
 import com.smart.entities.User;
 import com.smart.helper.Message;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +29,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -38,6 +46,12 @@ public class UserController {
 
     @Autowired
     private ContactRepository contactRepository;
+
+    @Value("${razorpay.key.id}")
+    private String razorPayId;
+
+    @Value("${rezorpay.key.secret}")
+    private String razorPaySecret;
 
     //    Method for adding common to response
     @ModelAttribute
@@ -203,7 +217,7 @@ public class UserController {
     //    opening setting handler
     @GetMapping("/settings")
     public String openSetting(Model model) {
-        model.addAttribute("title","Settings");
+        model.addAttribute("title", "Settings");
         return "normal/settings";
     }
 
@@ -216,7 +230,7 @@ public class UserController {
 
         if (this.bCryptPasswordEncoder.matches(oldPassword, currentUser.getPassword())) {
 
-           //changing the password
+            //changing the password
             currentUser.setPassword(this.bCryptPasswordEncoder.encode(newPassword));
             this.userRepository.save(currentUser);
             session.setAttribute("message", new Message("Your Password is Changed successfully..", "success"));
@@ -228,5 +242,21 @@ public class UserController {
 
         }
         return "redirect:/user/index";
+    }
+
+    @PostMapping("/create_payment")
+    @ResponseBody
+    public String createPayment(@RequestBody Map<String, Object> data) throws RazorpayException {
+        System.out.println("call me");
+        int amount = Integer.parseInt(data.get("amount").toString());
+        JSONObject orderRequest= new JSONObject();
+        orderRequest.put("amount",amount*100);
+        orderRequest.put("currency","INR");
+        orderRequest.put("receipt","order_1234");
+        RazorpayClient client= new RazorpayClient(razorPayId,razorPaySecret);
+        Order order=client.orders.create(orderRequest);
+        System.out.println(amount);
+        System.out.println(order);
+        return order.toString();
     }
 }

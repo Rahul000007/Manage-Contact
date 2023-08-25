@@ -14,14 +14,16 @@
                     <img alt="Profile Photo" style="width: 200px; height: 200px;" class="my_profile_picture" src=""
                          th:src="@{'/img/'+${user.imageUrl}}">
                 </div>
-
-                <h1 class="text-center mt-3" th:text="${user.name}"></h1>
+                <div class="d-flex justify-content-between">
+                 <h1 class="text-center mt-3" th:text="${user.name}"></h1>
+                <a  href="#" th:href="@{/user/add-contact}" class="item"> <i class="fa-solid fa-pen"></i>Edit Profile</a>
+                </div>
                 <div class="table-responsive">
                     <table class="table text-center">
                         <thead>
                         <tr>
                             <th class="col">#USERID</th>
-                            <th class="col">SCMUSER<span th:text="${user.id}"></span></th>
+                            <th class="col"><span th:text="${user.name}"></span>_<span th:text="${user.id}"></span></th>
                         </tr>
                         </thead>
                         <tbody>
