@@ -247,7 +247,6 @@ public class UserController {
     @PostMapping("/create_payment")
     @ResponseBody
     public String createPayment(@RequestBody Map<String, Object> data) throws RazorpayException {
-        System.out.println("call me");
         int amount = Integer.parseInt(data.get("amount").toString());
         JSONObject orderRequest= new JSONObject();
         orderRequest.put("amount",amount*100);
@@ -255,8 +254,6 @@ public class UserController {
         orderRequest.put("receipt","order_1234");
         RazorpayClient client= new RazorpayClient(razorPayId,razorPaySecret);
         Order order=client.orders.create(orderRequest);
-        System.out.println(amount);
-        System.out.println(order);
         return order.toString();
     }
 }

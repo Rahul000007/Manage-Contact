@@ -24,7 +24,7 @@
                             <th scope="col">Name</th>
                             <th scope="col">Email</th>
                             <th scope="col">Phone</th>
-                            <th scope="col">Action</th>
+                            <th scope="col" class="text-center">Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -41,10 +41,10 @@
                                 </a>
                             </td>
                             <td th:text="${c.phone}"></td>
-                            <td>
-                                <a th:href="@{'/user/delete/'+${c.cId}}" class="btn btn-danger btn-sm">Delete</a>
+                            <td class="d-flex">
+                                <a th:href="@{'/user/delete/'+${c.cId}}" class="btn btn-danger btn-sm m-auto">Delete</a>
 
-                                <form method="post" th:action="@{'/user/update-contact/'+${c.cId}}" class="mt-2">
+                                <form method="post" th:action="@{'/user/update-contact/'+${c.cId}}" class="m-auto">
 
                                     <button type="submit" class="btn btn-primary btn-sm">Update</button>
 

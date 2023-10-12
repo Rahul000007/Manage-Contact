@@ -171,12 +171,20 @@ public class HomeController {
         String name = (String) data.get("name");
         String email = (String) data.get("email");
         String image = (String) data.get("picture");
-        String existingEmail = userRepository.getUserByUserName(email).getEmail();
-        if (existingEmail.equals(email)) {
+
+        if(userRepository.getUserByUserName(email)!=null){
             model.addAttribute("user", new User());
             session.setAttribute("message", new Message("User Already Exists with this Email " + email, "alert-danger"));
             return "signup";
         }
+
+//        String existingEmail = userRepository.getUserByUserName(email).getEmail();
+//        if (existingEmail.equals(email)) {
+//            model.addAttribute("user", new User());
+//            session.setAttribute("message", new Message("User Already Exists with this Email " + email, "alert-danger"));
+//            return "signup";
+//        }
+//
         User user = new User();
         user.setName(firstName);
         user.setEmail(email);
