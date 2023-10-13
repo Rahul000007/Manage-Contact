@@ -1,5 +1,3 @@
-console.log("this is script file")
-
 const toggleSidebar = () => {
     if ($(".sidebar").is(":visible")) {
         $(".sidebar").css("display", "none");
@@ -47,11 +45,11 @@ function createPayment(){
         contentType:'application/json',
         dataType:'json',
         success:function (response){
-            console.log(response)
+            // console.log(response)
             if(response.status='created'){
             //     open payment form
                 let options={
-                    key:'rzp_test_zm7PDkysQKOrmH',
+                    key:'rzp_test_LJPb0aeV8drYkm',
                     amount:response.amount,
                     currency:response.currency,
                     name:"Cloud Contact",
@@ -62,7 +60,7 @@ function createPayment(){
                         // console.log(response.razorpay_order_id)
                         // console.log(response.razorpay_signature)
                         // console.log(response.razorpay_payment_id)
-                        console.log("payment successful")
+                        // console.log("payment successful")
                         swal("Success", "Congrats you have donated us ", "success");
                     },
                     prefill:{
